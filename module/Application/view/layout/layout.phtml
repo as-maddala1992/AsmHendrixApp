@@ -1,9 +1,30 @@
 <?php echo $this->doctype(); ?>
+<?php 
+    $urlName = $this->url();
+    $classVar = '';
+    $footerVar = '';
+    if($urlName != '/'){
+        $footerVar = "ts";
+    } 
 
+    $urlArray = explode('/', $urlName);
+    //echo "<pre>"; print_r($urlArray); exit();
+    if($urlArray[1] == 'timesheets'){
+        //echo "timesheets";
+        $classVar = "timesheets";
+        $headTitle = "Time Sheets";
+        //$footerVar = "ts";
+    } else {
+        //echo "nothing";
+        $classVar = "nothing";
+        $headTitle = "Home";
+        //$footerVar = " ";
+    }
+?>
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <?php echo $this->headTitle('ZF2 '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
+        <?php echo $this->headTitle($this->translate('ASM Site - ' . $headTitle))->setSeparator(' - ')->setAutoEscape(false) ?>
 
         <?php echo $this->headMeta()
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
@@ -34,22 +55,34 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php echo $this->basePath('img/zf2-logo.png') ?>" alt="Zend Framework 2"/>&nbsp;<?php echo $this->translate('Skeleton Application') ?></a>
+                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php echo $this->basePath('img/zf2-logo.png') ?>" alt="Zend Framework 2"/>&nbsp;<?php echo $this->translate('My Site ASM') ?></a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
+                        <li <?php if($classVar == 'timesheets') {?> class="active" <?php } ?> ><a href="<?php echo $this->url("currentmonth"); ?>"><?php echo $this->translate('Time Sheets') ?></a></li>
+                        <li ><a href=""><?php echo $this->translate('Music') ?></a></li>
+                        <li ><a href=""><?php echo $this->translate('TV Shows') ?></a>
+                        <li ><a href=""><?php echo $this->translate('Movies') ?></a></li>
+                        <li ><a href=""><?php echo $this->translate('Books') ?></a></li>
+                        <li ><a href=""><?php echo $this->translate('Anime') ?></a></li>
                     </ul>
-                </div><!--/.nav-collapse -->
+                </div>
+                <!--/.nav-collapse -->
             </div>
         </nav>
+
         <div class="container">
             <?php echo $this->content; ?>
-            <hr>
+
+        <div  <?php if($footerVar == 'ts') { ?> id="wrapper" <?php } ?> >
+            <!--<hr>-->
             <footer>
                 <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
             </footer>
+        </div>
+            
         </div> <!-- /container -->
         <?php echo $this->inlineScript() ?>
+        </div>
     </body>
 </html>
