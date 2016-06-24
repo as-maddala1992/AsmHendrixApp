@@ -166,4 +166,19 @@ div.container a.brand {
         position: relative;
         margin-right: 0;
     }
+
+    table {
+        width: 100%;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #3B6AA0;
+        color: white;
+    }
+
 }
