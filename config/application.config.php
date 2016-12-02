@@ -10,7 +10,8 @@ return array(
     'modules' => array(
         'Application',
         'Timesheets',
-        'Music'
+        'Music',
+        'Album'
     ),
 
     // These are various options for the listeners attached to the ModuleManager
