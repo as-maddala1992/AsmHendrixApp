@@ -1,14 +1,14 @@
 <?php
 
-namespace Timesheets\Model;
+namespace Music\Model;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\TableGateway\AbstractTableGateway;
 use Zend\Db\Sql\Select;
 
-class TimeSheetsTable extends AbstractTableGateway {
+class MusicTable extends AbstractTableGateway {
 
-    protected $table = 'time_sheet_table';
+    protected $table = 'music';
 
     /**
      * Set the database adapter
@@ -21,9 +21,8 @@ class TimeSheetsTable extends AbstractTableGateway {
 
    
     public function getAllEntries() {
-        
+        //die("kljbikvbadv");
         $resultSet = $this->select(function (Select $select) {
-           // $select->columns(array('day', 'year_month_id'));
             $select->order('id ASC');
         });
         //echo "<pre>"; print_r($resultSet); exit();

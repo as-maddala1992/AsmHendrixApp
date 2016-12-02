@@ -1,0 +1,40 @@
+<div id="wrapper">
+
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <!--<table id="myTable">-->
+        <table id="">    
+            <thead>
+                <tr role="row">
+                    <th style="width: 50px;" >ID</th>
+                    <th style="width: 150px;">Artist</th>
+                    <th style="width: 150px;">Track</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($albums as $a) { ?>
+                    <tr role="row" class="odd">
+                        <!--<td align="center"><input type="checkbox" value = <?php //echo $usr['id'];      ?>></td>-->
+                        <td><?php echo $a['id']?></td>
+                        <td><?php echo $a['artist']?></td>
+                        <td><?php echo $a['title']?></td>
+
+                    </tr>
+                <?php } ?>
+
+            </tbody>
+
+        </table>
+
+    </div>
+    <!-- /#page-content-wrapper -->
+</div>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+</script>
