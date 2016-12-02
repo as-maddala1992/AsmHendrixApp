@@ -44,9 +44,10 @@ return array(
             'albumlisting' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/music/listing[/:page][/:order_by][/:order]',
+                    //'route' => '/music/listing[/:page][/:order_by][/:order]',
+                    'route' => '/music/listing[/:order_by][/:order]',
                     'constraints' => array(
-                        'page'     => '[0-9]+',
+                        //'page'     => '[0-9]+',
                         'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'order' => 'ASC|DESC',
                     ),

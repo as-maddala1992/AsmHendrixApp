@@ -43,19 +43,39 @@ class IndexController extends AbstractActionController {
     }
 
     public function albumlistingAction() {
-        //return new ViewModel();
-        //die("ljkdabvldavlo");
-        $albumsTable = $this->getMusicTable()->getAllEntries();
+        $order_by    = $this->params()->fromRoute('order_by');
+        $order       = $this->params()->fromRoute('order');
+        $order_def = 'ASC';
+        $sort_var = NULL;
+        if($order_by){
+            $sort_var = "$order_by $order";
+            if($order == 'ASC'){
+                $order_next = 'DESC';
+            } else {
+                $order_next = $order_def;
+            } 
+            
+        } else {
+            $order_next = $order_def;
+        }
         
-        $order_by = $this->params()->fromRoute('order_by') ? $this->params()->fromRoute('order_by') : 'id';
-        $order = $this->params()->fromRoute('order') ? $this->params()->fromRoute('order') : 'ASC';
-
+        $albumsTable = $this->getMusicTable()->getAllEntries($sort_var);
+        
+        $columns_array = array(
+          array('title' => 'ID', 'sort_name' => 'id'),
+          array('title' => 'Artist', 'sort_name' => 'artist'),  
+          array('title' => 'Title', 'sort_name' => 'title'),  
+          array('title' => 'Created At', 'sort_name' => 'created_at'),    
+        );
+        
 
         return new ViewModel(array(
-            'albums' => $albumsTable,
-            'order_by' => $order_by,
-            'order' => $order,
-        ));
+            'albums'=> $albumsTable, 
+            'order_by'=> $order_by, 
+            'order'=> $order_next, 
+            'order_n' => $order,
+            'columns' => $columns_array
+                ));
     }
 
 }

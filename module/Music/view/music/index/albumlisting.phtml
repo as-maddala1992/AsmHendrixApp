@@ -1,3 +1,18 @@
+<style type = "text/css">
+
+
+    a {
+        color: #ffffff;
+    }
+    a:hover {
+        color: #ffffff;
+    }
+    a:link {
+        text-decoration: none;
+    }
+</style>
+
+
 <div id="wrapper">
 
 
@@ -7,19 +22,36 @@
         <table id="">    
             <thead>
                 <tr role="row">
-                    <th style="width: 50px;" >ID</th>
-                    <th style="width: 150px;">Artist</th>
-                    <th style="width: 150px;">Track</th>
+                    <?php
+                    foreach ($columns as $column) {
+                        if ($order_by == $column['sort_name']) {
+                            if ($order_n == 'DESC') {
+                                $class = 'fa-sort-desc';
+                                //$class = 'fa-sort-asc';
+                            } else if ($order_n == 'ASC') {
+                                $class = 'fa-sort-asc';
+                                //$class = 'fa-sort-desc';
+                            }
+                        } else {
+                            $class = 'fa-sort';
+                        }
+                        ?>
+
+                        <th style="width: 50px;" >
+                            <a href = "<?php echo $this->url("albumlisting", array('order_by' => $column['sort_name'], 'order' => $order)); ?>"><?php echo $column['title']?> <i class="fa <?php echo $class; ?>" aria-hidden="true"></i></a>
+                        </th>
+                    <?php } ?>
+
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($albums as $a) { ?>
                     <tr role="row" class="odd">
-                        <!--<td align="center"><input type="checkbox" value = <?php //echo $usr['id'];      ?>></td>-->
-                        <td><?php echo $a['id']?></td>
-                        <td><?php echo $a['artist']?></td>
-                        <td><?php echo $a['title']?></td>
-
+                        <!--<td align="center"><input type="checkbox" value = <?php //echo $usr['id'];         ?>></td>-->
+                        <td><?php echo $a['id'] ?></td>
+                        <td><?php echo $a['artist'] ?></td>
+                        <td><?php echo $a['title'] ?></td>
+                        <td><?php echo date('d-m-Y', strtotime($a['created_at'])); ?></td>
                     </tr>
                 <?php } ?>
 

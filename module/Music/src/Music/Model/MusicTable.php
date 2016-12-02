@@ -20,10 +20,16 @@ class MusicTable extends AbstractTableGateway {
     }
 
    
-    public function getAllEntries() {
+    public function getAllEntries($sort_var = NULL) {
         //die("kljbikvbadv");
-        $resultSet = $this->select(function (Select $select) {
-            $select->order('id ASC');
+        $resultSet = $this->select(function (Select $select) use($sort_var) {
+            $select->columns(array('id', 'artist', 'title', 'created_at'));
+            
+            
+            if($sort_var){
+                $select->order("$sort_var");
+            }
+            //$select->order('id ASC');
         });
         //echo "<pre>"; print_r($resultSet); exit();
         return $resultSet->toArray();
