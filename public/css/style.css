@@ -57,7 +57,7 @@ div.container a.brand {
     height: 100%;
     margin-left: -250px;
     overflow-y: auto;
-    background: #000;
+    background: #167F92;
     margin-top:-10px;
 
     -webkit-transition: all 0.5s ease;
@@ -100,7 +100,7 @@ div.container a.brand {
 .sidebar-nav li a {
     display: block;
     text-decoration: none;
-    color: #6666FF;
+    color: #FFFFFF;
 }
 
 .sidebar-nav li a:hover {
@@ -111,7 +111,7 @@ div.container a.brand {
 
 .sidebar-nav  .active-selection{
     font-weight: bold;
-    background-color: #F0E68C;
+    background-color: #5ba5b2;
 }
 
 .sidebar-nav li a:active,
@@ -130,11 +130,11 @@ div.container a.brand {
 }
 
 .sidebar-nav > .sidebar-brand span {
-    color: #ffffff;
+    color: #FFFFFF;
 }
 
 .sidebar-nav > .sidebar-brand a:hover {
-    color: #fff;
+    color: #FFFFFF;
     background: none;
 }
 

@@ -50,6 +50,8 @@ class IndexController extends AbstractActionController {
     public function currentmonthAction() {
         $order_by = $this->params()->fromRoute('order_by');
         $order = $this->params()->fromRoute('order');
+        $page = $this->params()->fromRoute('page') ? (int) $this->params()->fromRoute('page') : 1;
+        
         $order_def = 'ASC';
         $sort_var = NULL;
         if ($order_by) {
@@ -66,7 +68,7 @@ class IndexController extends AbstractActionController {
         $columns_and_menu = $this->getTableColumnsAndSideMenu();
         //echo "<pre>"; print_r($tableData); exit();cols_array
         return new ViewModel(array(
-            'time_sheets_listing' => $tableData, 'columns' => $columns_and_menu['cols_array'],
+            'time_sheets_listing' => $tableData, 'columns' => $columns_and_menu['cols_array'], 'page' => $page,
             'menu' => $columns_and_menu['menu_array'], 'order_by' => $order_by, 'order' => $order_next, 'order_n' => $order,
         ));
     }
@@ -112,10 +114,10 @@ class IndexController extends AbstractActionController {
         );
 
         $menu_array = array(
-            array('menu_name' => 'Dashboard', 'menu_url' => 'dashboard'),
+            //array('menu_name' => 'Dashboard', 'menu_url' => 'dashboard'),
             array('menu_name' => 'Present Month', 'menu_url' => 'currentmonth'),
             array('menu_name' => 'Archives', 'menu_url' => 'archives'),
-            array('menu_name' => 'Statistics', 'menu_url' => 'statistics'),
+            //array('menu_name' => 'Statistics', 'menu_url' => 'statistics'),
         );
 
 

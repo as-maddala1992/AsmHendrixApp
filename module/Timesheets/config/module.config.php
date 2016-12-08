@@ -56,9 +56,9 @@ return array(
             'currentmonth' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/timesheets/currentmonth[/:order_by][/:order]',
+                    'route' => '/timesheets/currentmonth[/:page][/:order_by][/:order]',
                     'constraints' => array(
-                        //'page'     => '[0-9]+',
+                        'page'     => '[0-9]+',
                         'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'order' => 'ASC|DESC',
                     ),
