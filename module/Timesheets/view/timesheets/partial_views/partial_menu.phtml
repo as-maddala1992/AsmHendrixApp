@@ -1,0 +1,33 @@
+<?php 
+   
+    
+    //$menu_item = 'Present Month';
+
+?>
+
+
+
+<div id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand">
+            <span>Menu Options</span>
+        </li>
+        
+        <?php 
+            foreach($menu_array as $ma){ 
+                $class = '';
+                if($ma['menu_name'] == $menu_item){
+                    $class = 'active-selection';
+                }             
+        ?>
+            
+            <li class = "<?php echo $class; ?>">
+                <a href="<?php echo $this->url($ma['menu_url']); ?>"><?php echo $ma['menu_name']; ?></a>
+            </li>
+        
+        
+        <?php } ?>
+        
+    </ul>
+</div>
+

@@ -20,11 +20,27 @@ class TimeSheetsTable extends AbstractTableGateway {
     }
 
    
-    public function getAllEntries() {
+    public function getAllEntries($sort_order = NULL) {
         
-        $resultSet = $this->select(function (Select $select) {
-           // $select->columns(array('day', 'year_month_id'));
-            $select->order('id ASC');
+        $resultSet = $this->select(function (Select $select) use ($sort_order) {
+            $select->columns(array('id', 'date', 'in_time', 'out_time', 'total_hours', 'excess_deficit', 'status'));
+            if($sort_order){
+                $select->order("$sort_order");
+            } else {
+                $select->order('date DESC');
+            }
+            //$select->order('id ASC');
+        });
+        //echo "<pre>"; print_r($resultSet); exit();
+        return $resultSet->toArray();
+    }
+    
+    public function getEntryById($id) {
+        
+        $resultSet = $this->select(function (Select $select) use ($id) {
+            $select->columns(array('id', 'date', 'in_time', 'out_time', 'total_hours', 'excess_deficit'));
+            //$select->order('id ASC');
+            $select->where(array('id' => $id));
         });
         //echo "<pre>"; print_r($resultSet); exit();
         return $resultSet->toArray();

@@ -1,27 +1,44 @@
+<style>
+    .clock-in-button {
+        background-color: #3B6AA0; 
+        border: 0;
+        color: #FFFFFF;
+        font-weight: bold;
+        padding: 10px 20px; 
+    }
 
+    .clock-in-button:hover {
+        background: #1E90FF; /* Dodger Blue */
+        color: #FFFFFF;
+        text-decoration: none;  
+    }
+    
+    .clock-container {
+    background-color: lightgrey;
+    width: 300px;
+    border: none;
+    padding: 25px;
+    margin: 25px;
+    float: right;
+    
+    
+    
+}
+</style>
 
 <div id="wrapper">
         <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <span>Menu Options</span>
-                </li>
-                <li class="active-selection">
-                    <a href="<?php echo $this->url('dashboard');?>">Dashboard</a>
-                </li>
-                <li>
-                    <a href="<?php echo $this->url('currentmonth');?>">Present Month</a>
-                </li>
-                <li>
-                    <a href="<?php echo $this->url('archives');?>">Archives</a>
-                </li>
-                <li>
-                    <a href="<?php echo $this->url('statistics');?>">Statistics</a>
-                </li>
-            </ul>
-        </div>
+        <?php echo $this->partial('menu_view', array('menu_item' => 'Dashboard', 'menu_array' => $menu)); ?>
         <!-- /#sidebar-wrapper -->
+        <div class="jumbotron">
+            <!--<a class="clock-in-button" href="">Check In</a>-->
+            <div class="clock-container">
+                
+            </div>
+            
+            
+            
+        </div>
 
         <!-- Page Content -->
         <div id="page-content-wrapper">

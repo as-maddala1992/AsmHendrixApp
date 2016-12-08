@@ -26,12 +26,12 @@ class IndexController extends AbstractActionController {
      */
 
     function __construct() {
-        /*$authManager = new \Zend\Authentication\AuthenticationService();
-        if ($authManager->hasIdentity()) {
-            $this->userName = $authManager->getIdentity()->username;
-            $this->userId = $authManager->getIdentity()->user_id;
-            $this->userRole = $authManager->getIdentity()->user_role;
-        }*/
+        /* $authManager = new \Zend\Authentication\AuthenticationService();
+          if ($authManager->hasIdentity()) {
+          $this->userName = $authManager->getIdentity()->username;
+          $this->userId = $authManager->getIdentity()->user_id;
+          $this->userRole = $authManager->getIdentity()->user_role;
+          } */
     }
 
     private function getTimeSheetsTable() {
@@ -42,19 +42,38 @@ class IndexController extends AbstractActionController {
         return $this->_timesheetsTable;
     }
 
-    
     public function dashboardAction() {
-        return new ViewModel();
+        $columns_and_menu = $this->getTableColumnsAndSideMenu();
+        return new ViewModel(array('menu' => $columns_and_menu['menu_array']));
     }
 
     public function currentmonthAction() {
-        $tableData = $this->getTimeSheetsTable()->getAllEntries();
-       // echo "<pre>"; print_r($tableData); exit();
-        return new ViewModel();
+        $order_by = $this->params()->fromRoute('order_by');
+        $order = $this->params()->fromRoute('order');
+        $order_def = 'ASC';
+        $sort_var = NULL;
+        if ($order_by) {
+            $sort_var = "$order_by $order";
+            if ($order == 'ASC') {
+                $order_next = 'DESC';
+            } else {
+                $order_next = $order_def;
+            }
+        } else {
+            $order_next = $order_def;
+        }
+        $tableData = $this->getTimeSheetsTable()->getAllEntries($sort_var);
+        $columns_and_menu = $this->getTableColumnsAndSideMenu();
+        //echo "<pre>"; print_r($tableData); exit();cols_array
+        return new ViewModel(array(
+            'time_sheets_listing' => $tableData, 'columns' => $columns_and_menu['cols_array'],
+            'menu' => $columns_and_menu['menu_array'], 'order_by' => $order_by, 'order' => $order_next, 'order_n' => $order,
+        ));
     }
 
     public function archivesAction() {
-        return new ViewModel();
+        $columns_and_menu = $this->getTableColumnsAndSideMenu();
+        return new ViewModel(array('menu' => $columns_and_menu['menu_array']));
     }
 
     public function previousmonthAction() {
@@ -65,10 +84,42 @@ class IndexController extends AbstractActionController {
     }
 
     public function statisticsAction() {
+        $columns_and_menu = $this->getTableColumnsAndSideMenu();
+        return new ViewModel(array('menu' => $columns_and_menu['menu_array']));
+    }
+    
+    public function addentryAction() {
+        //$entryId = $this->getEvent()->getRouteMatch()->getParam('id');
+        //$tableData = $this->getTimeSheetsTable()->getEntryById($entryId);
+        //echo "<pre>"; print_r($tableData); exit();
         return new ViewModel();
     }
 
+    public function editentryAction() {
+        $entryId = $this->getEvent()->getRouteMatch()->getParam('id');
+        $tableData = $this->getTimeSheetsTable()->getEntryById($entryId);
+       // echo "<pre>"; print_r($tableData); exit();
+        return new ViewModel();
+    }
 
-    
+    private function getTableColumnsAndSideMenu() {
+        $columns_array = array(
+            array('title' => 'Date', 'sort_name' => 'date'),
+            array('title' => 'In time', 'sort_name' => 'in_time'),
+            array('title' => 'Out time', 'sort_name' => 'out_time'),
+            array('title' => 'Total Hours', 'sort_name' => 'total_hours'),
+            array('title' => 'Excess/Deficit', 'sort_name' => 'excess_deficit'),
+        );
+
+        $menu_array = array(
+            array('menu_name' => 'Dashboard', 'menu_url' => 'dashboard'),
+            array('menu_name' => 'Present Month', 'menu_url' => 'currentmonth'),
+            array('menu_name' => 'Archives', 'menu_url' => 'archives'),
+            array('menu_name' => 'Statistics', 'menu_url' => 'statistics'),
+        );
+
+
+        return array('cols_array' => $columns_array, 'menu_array' => $menu_array);
+    }
+
 }
-

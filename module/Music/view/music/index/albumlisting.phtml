@@ -1,25 +1,10 @@
-<style type = "text/css">
-
-
-    a {
-        color: #ffffff;
-    }
-    a:hover {
-        color: #ffffff;
-    }
-    a:link {
-        text-decoration: none;
-    }
-</style>
-
-
 <div id="wrapper">
 
 
     <!-- Page Content -->
     <div id="page-content-wrapper">
         <!--<table id="myTable">-->
-        <table id="">    
+        <table class="responstable">    
             <thead>
                 <tr role="row">
                     <?php
@@ -38,7 +23,7 @@
                         ?>
 
                         <th style="width: 50px;" >
-                            <a href = "<?php echo $this->url("albumlisting", array('order_by' => $column['sort_name'], 'order' => $order)); ?>"><?php echo $column['title']?> <i class="fa <?php echo $class; ?>" aria-hidden="true"></i></a>
+                            <a class = "table_url" href = "<?php echo $this->url("albumlisting", array('order_by' => $column['sort_name'], 'order' => $order)); ?>"><?php echo $column['title']?> <i class="fa <?php echo $class; ?>" aria-hidden="true"></i></a>
                         </th>
                     <?php } ?>
 

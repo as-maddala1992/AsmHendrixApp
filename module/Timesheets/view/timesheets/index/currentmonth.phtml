@@ -1,41 +1,87 @@
 <div id="wrapper">
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <span>Menu Options</span>
-                </li>
-                <li>
-                    <a href="<?php echo $this->url('dashboard');?>">Dashboard</a>
-                </li>
-                <li class="active-selection">
-                    <a href="<?php echo $this->url('currentmonth');?>">Present Month</a>
-                </li>
-                <li>
-                    <a href="<?php echo $this->url('archives');?>">Archives</a>
-                </li>
-                <li>
-                    <a href="<?php echo $this->url('statistics');?>">Statistics</a>
-                </li>
-            </ul>
+
+    <style type="text/css">
+        h1.table_heading{
+            font-size: 30px;
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+
+    <?php echo $this->partial('menu_view', array('menu_item' => 'Present Month', 'menu_array' => $menu)); ?>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <h1>Timesheet for the month of - December 2016</h1>
+        
+        <div class = "button-actions">
+            <a class="clock-in-button" href="">Check In</a>
+            <a class = "clock-in-button" href = "<?php echo $this->url("currentmonth"); ?>">Reset Sort</a>
         </div>
-        <!-- /#sidebar-wrapper -->
 
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <table>
-                <th style="width: 150px;" >Date</th>
-                <th style="width: 150px;" >Time In</th>
-                <th style="width: 150px;" >Time Out</th>
-                <th style="width: 150px;" >Actions</th>
+        <table class="responstable">
+            <?php
+            foreach ($columns as $column) {
+                if ($order_by == $column['sort_name']) {
+                    if ($order_n == 'DESC') {
+                        $class = 'fa-sort-desc';
+                        //$class = 'fa-sort-asc';
+                    } else if ($order_n == 'ASC') {
+                        $class = 'fa-sort-asc';
+                        //$class = 'fa-sort-desc';
+                    }
+                } else {
+                    $class = 'fa-sort';
+                }
+                ?>
 
+                <th style="width: 150px;" >
+                    <a class = "table_url" href = "<?php echo $this->url("currentmonth", array('order_by' => $column['sort_name'], 'order' => $order)); ?>"><?php echo $column['title'] ?> <i class="fa <?php echo $class; ?>" aria-hidden="true"></i></a>
+                </th>
+            <?php } ?>
+            <th style="width: 100px;" >Actions</th>
+
+
+
+
+
+
+            <?php foreach ($time_sheets_listing as $ts) { ?>
+                <?php
+                $date = date('d-m-Y', strtotime($ts['date']));
+                $in_time = date('H:i:s', strtotime($ts['in_time']));
+                $out_time = NULL;
+                if ($ts['out_time']) {
+                    $out_time = date('H:i:s', strtotime($ts['out_time']));
+                }
+                $total_hrs = $ts['total_hours'];
+                $excess_def = $ts['excess_deficit'];
+                $status = $ts['status'];
+                ?>
                 <tr>
-                    <td>17-10-1992</td>
-                    <td>09:00 Hrs</td>
-                    <td></td>
-                    <td>actions indeed!</td>
-                </tr>
-            </table>
-        </div>
-        <!-- /#page-content-wrapper -->
+                    <td><?php echo $date; ?></td>
+                    <td><?php echo $in_time; ?></td>
+                    <td><?php echo $out_time; ?></td>
+                    <td><?php echo $total_hrs; ?></td>
+                    <td><?php echo $excess_def; ?></td>
+                    <td>
+                        <?php if ($status == 0) { ?>
+                            <a class = "table_action_url" href="<?php echo $this->url('editentry', array('id' => $ts['id'])) ?>" title="Edit Entry"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
+                        <?php } else { ?>
+                            <a class = "table_action_url" href="<?php echo $this->url('editentry', array('id' => $ts['id'])) ?>" title="Clock Out"><i class="fa fa-moon-o fa-2x" aria-hidden="true"></i></a>
+                        <?php } ?>
+                        <a class = "table_action_url" href="<?php echo $this->url('editentry', array('id' => $ts['id'])) ?>" title="Delete Entry"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+
+                    </td>
+                </tr>  
+
+            <?php } ?>
+
+        </table>
+    </div>
+    <!-- /#page-content-wrapper -->
 </div>

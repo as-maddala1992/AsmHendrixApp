@@ -56,7 +56,12 @@ return array(
             'currentmonth' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/timesheets/currentmonth',
+                    'route' => '/timesheets/currentmonth[/:order_by][/:order]',
+                    'constraints' => array(
+                        //'page'     => '[0-9]+',
+                        'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'order' => 'ASC|DESC',
+                    ),
                     'defaults' => array(
                         'controller' => 'Timesheets\Controller\Index',
                         'action' => 'currentmonth',
@@ -101,31 +106,34 @@ return array(
                 ),
             ),
             
-            //2-> Shibboleth Authentication
-            /*'shibbolethauth' => array(
-                'type' => 'segment',
+            //6-> ADD TIME ENTRY
+             'addentry' => array(
+                'type' => 'literal',
                 'options' => array(
-                    'route' => '/shibboleth/authenticate',
+                    'route' => '/timesheets/addentry',
                     'defaults' => array(
-                        'controller' => 'Shibboleth\Controller\Index',
-                        'action' => 'shibbolethauth',
+                        'controller' => 'Timesheets\Controller\Index',
+                        'action' => 'addentry',
                     ),
                 ),
             ),
             
-            //3-> Shibboleth Logout
-            'shibbolethlogout' => array(
+            //7-> EDIT TIME ENTRY
+             'editentry' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/shibboleth/shibbolethlogout',
+                    'route' => '/timesheets/editentry[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+',
+                    ),
                     'defaults' => array(
-                        'controller' => 'Shibboleth\Controller\Index',
-                        'action' => 'shibbolethlogout',
+                        'controller' => 'Timesheets\Controller\Index',
+                        'action' => 'editentry',
                     ),
                 ),
             ),
             
-            */
+            
             
            
         ),
@@ -162,6 +170,9 @@ return array(
         'doctype' => 'HTML5',
         'template_path_stack' => array(
             __DIR__ . '/../view',
+        ),
+        'template_map' => array(
+            'menu_view' => __DIR__ . '/../view/timesheets/partial_views/partial_menu.phtml',
         ),
     ),
     'default_template_suffix' => 'phtml',

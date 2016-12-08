@@ -1,24 +1,6 @@
 <div id="wrapper">
         <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <span>Menu Options</span>
-                </li>
-                <li>
-                    <a href="<?php echo $this->url('dashboard');?>">Dashboard</a>
-                </li>
-                <li>
-                    <a href="<?php echo $this->url('currentmonth');?>">Present Month</a>
-                </li>
-                <li class="active-selection">
-                    <a href="<?php echo $this->url('archives');?>">Archives</a>
-                </li>
-                <li>
-                    <a href="<?php echo $this->url('statistics');?>">Statistics</a>
-                </li>
-            </ul>
-        </div>
+        <?php echo $this->partial('menu_view', array('menu_item' => 'Present Month')); ?>
         <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
