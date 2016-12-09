@@ -1,18 +1,38 @@
 <div id="wrapper">
 
     <style type="text/css">
-        h1, h2, h3, h4.table_heading{
-            font-size: 30px;
-            color: #167F92;
-            text-transform: uppercase !important;
-            font-weight: 300;
-            text-align: center !important;
-            
+        ul { list-style-type: none; }
+
+        .radio_inline_label{
+            display: inline-block;
+            padding-right: 20px;
+
+            margin-bottom: 0;
+            font-weight: normal;
+            vertical-align: middle;
+            cursor: pointer;
         }
-        
-        .padded_heading {margin-bottom: 35px;}
-        
-       
+
+        .formcontrol_width { width: 30%; }
+
+        .centered_form {width: auto; height: 150px; margin: 0 auto;}
+        .form_btm_margin{margin-left: 100px;}
+        .alert-success {width: 100%; top: -16px;position: relative;top: 0px;}
+
+        .users-ptpb20 {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            background: #b9d8de; /* 167F92*/
+            font-size: 15px;
+            color: #FFFFFF;
+            margin-top: 78px;
+            margin-left: 4px;
+            margin-right: 2px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .clock-in-button {  margin-right: 6px; border-radius: 10px; }
     </style>
 
     <?php echo $this->partial('menu_view', array('menu_item' => 'Present Month', 'menu_array' => $menu)); ?>
@@ -22,11 +42,26 @@
     <div id="page-content-wrapper">
         <h1 class = "table_heading padded_heading">Timesheet for the month of - December 2016</h1>
 
+
+
+        <?php
+        $flash = $this->flashMessenger();
+        $flash->setMessageOpenFormat('<div%s>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+            </button><div>')->setMessageCloseString('</div></div>');
+
+        echo $flash->render('error', array('alert', 'alert-dismissable', 'alert-danger'));
+        echo $flash->render('success', array('alert', 'alert-dismissable', 'alert-success'));
+        echo $flash->render('info', array('alert', 'alert-dismissable', 'alert-info'));
+        echo $flash->render('default', array('alert', 'alert-dismissable', 'alert-warning'));
+        ?>
         <div class = "button-actions">
             <a class="clock-in-button" href="" data-target="#myModal" data-toggle="modal">Check In</a>
             <a class = "clock-in-button" href = "<?php echo $this->url("currentmonth"); ?>">Reset Sort</a>
         </div>
-
+        <div class="row users-ptpb20">
+            <div class="col-md-6">Total Excess/Deficit : <i><?php echo $total_ed?></i> hours</div>
+        </div>
         <table class="responstable">
             <?php
             foreach ($columns as $column) {
@@ -71,9 +106,9 @@
                         <?php if ($status == 0) { ?>
                             <a class = "table_action_url" href="<?php echo $this->url('editentry', array('id' => $ts['id'])) ?>" title="Edit Entry"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
                         <?php } else { ?>
-                            <a class = "table_action_url" href="<?php echo $this->url('editentry', array('id' => $ts['id'])) ?>" title="Clock Out"><i class="fa fa-moon-o fa-2x" aria-hidden="true"></i></a>
+                            <a class = "table_action_url" href="<?php echo $this->url('checkout', array('id' => $ts['id'])) ?>" title="Clock Out"><i class="fa fa-moon-o fa-2x" aria-hidden="true"></i></a>
                         <?php } ?>
-                        <a class = "table_action_url" href="<?php echo $this->url('editentry', array('id' => $ts['id'])) ?>" title="Delete Entry"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+                        <a class = "table_action_url" href="<?php echo $this->url('deleteentry', array('id' => $ts['id'])) ?>" title="Delete Entry"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
 
                     </td>
                 </tr>  
@@ -81,6 +116,22 @@
             <?php } ?>
 
         </table>
+        <?php
+        // add at the end of the file after the table
+        echo $this->paginationControl(
+                // the paginator object
+                $time_sheets_listing,
+                // the scrolling style
+                'sliding',
+                // the partial to use to render the control
+                'partial/paginator.phtml',
+                // the route to link to when a user clicks a control link
+                array(
+                'order_by' => $order_by, 'order' => $order_n
+                // 'route' => 'userlist'
+                )
+        );
+        ?>
 
         <!-- Modal -->
         <div class="modal fade" id="myModal" role="dialog">
@@ -90,14 +141,52 @@
                 <div class="modal-content">
                     <div class="modal-header table_heading">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title table_heading">Modal Header</h4>
+                        <h4 class="modal-title table_heading">Check In</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Some text in the modal.</p>
+                        <div class = "centered_form">
+                            <form  action="<?php echo $this->url('addentry'); ?>" method="POST" id = "ts_add">
+                                <div class="form-group">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="now" value = "now" checked>Check-in now
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="now" value = "earlier" >Check-in earlier
+                                    </label>
+                                </div>
+
+                                <div class="form-group time_selector">
+                                    <select class="form-control formcontrol_width radio-inline" name="hours" >
+                                        <option value="" disabled selected>HOURS</option>
+                                        <?php for ($i = 0; $i <= 23; $i ++) { ?>
+                                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                        <?php } ?>
+                                    </select>
+
+                                    <select class="form-control formcontrol_width radio-inline" name="minutes">
+                                        <option value="" disabled selected>MINUTES</option>
+                                        <?php for ($i = 1; $i <= 60; $i ++) { ?>
+                                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                        <?php } ?>
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group"> 
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="clock-in-button form_btm_margin">Submit</button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+
+                        </div>
+
+
+
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
+
                 </div>
 
             </div>
@@ -109,3 +198,31 @@
     </div>
     <!-- /#page-content-wrapper -->
 </div>
+<script>
+    $(document).ready(function () {
+
+        $(".time_selector").hide();
+
+        $("#ts_add input").change(function () {
+            if ($(this).is(":checked")) {
+                var a = $('input[name=now]:checked', '#ts_add').val();
+
+                if (a === 'now') {
+
+                    $(".time_selector").hide();
+
+
+                } else if (a === 'earlier') {
+                    $(".time_selector").show();
+
+
+                } else {
+                    $(".time_selector").show();
+                }
+
+            }
+        });
+
+    });
+</script>
+

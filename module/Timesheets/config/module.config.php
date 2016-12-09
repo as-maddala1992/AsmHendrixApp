@@ -133,6 +133,35 @@ return array(
                 ),
             ),
             
+            //8-> CHECKOUT
+             'checkout' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/timesheets/checkout[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Timesheets\Controller\Index',
+                        'action' => 'checkout',
+                    ),
+                ),
+            ),
+            //8-> delete
+             'deleteentry' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/timesheets/deleteentry[/:id]',
+                    'constraints' => array(
+                        'id' => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Timesheets\Controller\Index',
+                        'action' => 'deleteentry',
+                    ),
+                ),
+            ),
+            
             
             
            

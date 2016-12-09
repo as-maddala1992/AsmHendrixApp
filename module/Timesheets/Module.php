@@ -45,6 +45,22 @@ class Module
                     $table = new \Timesheets\Model\TimeSheetsTable($dbAdapter);
                     return $table;
                 },
+                'Timesheets\Model\YearTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new \Timesheets\Model\YearTable($dbAdapter);
+                    return $table;
+                }, 
+                'Timesheets\Model\MonthTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new \Timesheets\Model\MonthTable($dbAdapter);
+                    return $table;
+                },
+                'Timesheets\Model\DayTable' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $table = new \Timesheets\Model\DayTable($dbAdapter);
+                    return $table;
+                },
+                        
             ),
         );
     }
