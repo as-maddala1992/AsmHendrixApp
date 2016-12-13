@@ -10,6 +10,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Paginator\Paginator;
 use Zend\Paginator\Adapter\Iterator as paginatorIterator;
+
 //use Helper;
 //use Zend\InputFilter\Input;
 //use Zend\InputFilter\InputFilter;
@@ -92,17 +93,17 @@ class IndexController extends AbstractActionController {
         } else {
             $order_next = $order_def;
         }
-        
+
         $tableData = $this->getTimeSheetsTable()->getAllEntries($sort_var);
-        
+
         //echo "<pre>";        print_r($tableData->toArray());        exit();
-        
+
         $itemsPerPage = 5;
         $tableData->current();
         $paginator = new Paginator(new paginatorIterator($tableData));
         $paginator->setCurrentPageNumber($page)->setItemCountPerPage($itemsPerPage)->setPageRange(3);
-        
-        
+
+
         $columns_and_menu = $this->getTableColumnsAndSideMenu();
         //echo "<pre>"; print_r($tableData); exit();cols_array
         return new ViewModel(array(
@@ -168,7 +169,7 @@ class IndexController extends AbstractActionController {
     public function deleteentryAction() {
         $entryId = $this->getEvent()->getRouteMatch()->getParam('id');
         $del_entry = $this->getTimeSheetsTable()->deleteEntry($entryId);
-        
+
         $namespace = 'success';
         if ($del_entry['status'] == 'insert_failed') {
             $namespace = 'error';
@@ -180,29 +181,40 @@ class IndexController extends AbstractActionController {
 
     public function checkoutAction() {
 
-        $entryId = $this->getEvent()->getRouteMatch()->getParam('id');
-        $tableData = $this->getTimeSheetsTable()->getEntryById($entryId);
-        $total_time = strtotime(date('H:i:s')) - strtotime($tableData[0]['in_time']);
-        $hours = round($total_time / 3600, 2);
-        
-        if($tableData[0]['day_id'] == 6 || $tableData[0]['day_id'] == 7){
-            $excess_deficit = $hours;
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $entryId = $request->getPost('entry_id');
+            if ($request->getPost('now') == 'later') {
+                $out_time = date('H:i:s', strtotime($request->getPost('hours') . ":" . $request->getPost('minutes')));
+            } else {
+                $out_time = date('H:i:s');
+            }
+
+            $tableData = $this->getTimeSheetsTable()->getEntryById($entryId);
+            $total_time = strtotime($out_time) - strtotime($tableData[0]['in_time']);
+            $hours = round($total_time / 3600, 2);
+
+            if ($tableData[0]['day_id'] == 6 || $tableData[0]['day_id'] == 7) {
+                $excess_deficit = $hours;
+            } else {
+                $excess_deficit = $hours - 8.75;
+            }
+
+            $data_array = array(
+                'out_time' => $out_time, 'total_hours' => $hours,
+                'excess_deficit' => $excess_deficit, 'status' => 0
+            );
+
+            $update_entry = $this->getTimeSheetsTable()->saveOrUpdate($data_array, $tableData[0]['id']);
+            $namespace = 'success';
+            if ($update_entry['status'] == 'insert_failed') {
+                $namespace = 'error';
+            }
+            $this->flashMessenger()->setNamespace($namespace)->addMessage($update_entry['message']);
+            return $this->redirect()->toRoute("currentmonth");
         } else {
-            $excess_deficit = $hours - 8.75;
+            return $this->redirect()->toRoute("currentmonth");
         }
-
-        $data_array = array(
-            'out_time' => date('H:i:s'), 'total_hours' => $hours,
-            'excess_deficit' => $excess_deficit, 'status' => 0
-        );
-
-        $update_entry = $this->getTimeSheetsTable()->saveOrUpdate($data_array, $tableData[0]['id']);
-        $namespace = 'success';
-        if ($update_entry['status'] == 'insert_failed') {
-            $namespace = 'error';
-        }
-        $this->flashMessenger()->setNamespace($namespace)->addMessage($update_entry['message']);
-        return $this->redirect()->toRoute("currentmonth");
     }
 
     private function getTableColumnsAndSideMenu() {
@@ -224,14 +236,14 @@ class IndexController extends AbstractActionController {
 
         return array('cols_array' => $columns_array, 'menu_array' => $menu_array);
     }
-    
-    private function getTotalExcessDeficitTime($timesheetData){
+
+    private function getTotalExcessDeficitTime($timesheetData) {
         $data = $timesheetData->toArray();
         $val = 0;
-        foreach ($data as $value){
+        foreach ($data as $value) {
             $val = $val + $value['excess_deficit'];
         }
-        
+
         return $val;
     }
 
